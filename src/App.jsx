@@ -4,10 +4,12 @@ import Header from "./components/Header.jsx";
 import Shop from "./components/Shop.jsx";
 import { DUMMY_PRODUCTS } from "./dummy-products.js";
 
-import { ShoppingCartContext } from "./store/shopping-cart-context.js";
+import {CartContext } from "./store/shopping-cart-context.js";
+
 function App() {
   const [shoppingCart, setShoppingCart] = useState({
     items: [],
+    addItemToCart: () => {},
   });
 
   function handleAddItemToCart(id) {
@@ -65,10 +67,13 @@ function App() {
       };
     });
   }
-
+  const ctxValue ={
+    items: shoppingCart.items,
+    addItemToCart: handleAddItemToCart,
+  }
   return (
     <>
-      <ShoppingCartContext.Provider value= {{ items: [] }}>
+      <CartContext.Provider value= {ctxValue}>
         <Header
           cart={shoppingCart}
           onUpdateCartItemQuantity={handleUpdateCartItemQuantity}
@@ -76,11 +81,11 @@ function App() {
         <Shop onAddItemToCart>
           {DUMMY_PRODUCTS.map((product) => (
             <li key={product.id}>
-              <Product {...product} onAddToCart={handleAddItemToCart} />
+              <Product {...product} addItemToCart={handleAddItemToCart} />
             </li>
           ))}
         </Shop>
-      </ShoppingCartContext.Provider>
+      </CartContext.Provider>
     </>
   );
 }
